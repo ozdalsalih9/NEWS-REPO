@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using NewsProject.Models;
 
 namespace NewsProject.Controllers
-{
+{ /*enescan gotten yiyor*/
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
