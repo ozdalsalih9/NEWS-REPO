@@ -7,29 +7,26 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NewsProject.Data;
 using NewsProject.Models;
-using NewsProject.Utils;
 
 namespace NewsProject.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class NewsController : Controller
+    public class AuthorsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public NewsController(ApplicationDbContext context)
+        public AuthorsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Admin/News
+        // GET: Admin/Authors
         public async Task<IActionResult> Index()
         {
-            ViewBag.Authors = new SelectList(_context.Authors, "Id", "Name");
-            ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name");
-            return View(await _context.News.ToListAsync());
+            return View(await _context.Authors.ToListAsync());
         }
 
-        // GET: Admin/News/Details/5
+        // GET: Admin/Authors/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -37,52 +34,38 @@ namespace NewsProject.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var news = await _context.News
+            var author = await _context.Authors
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (news == null)
+            if (author == null)
             {
                 return NotFound();
             }
 
-            return View(news);
+            return View(author);
         }
 
-        // GET: Admin/News/Create
+        // GET: Admin/Authors/Create
         public IActionResult Create()
         {
-            ViewBag.Authors = new SelectList(_context.Authors, "Id", "Name");
-            ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name");
-
             return View();
         }
 
-        // POST: Admin/News/Create
+        // POST: Admin/Authors/Create
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(News news, IFormFile? ImageFile)
+        public async Task<IActionResult> Create( Author author)
         {
             if (ModelState.IsValid)
             {
-                if (ImageFile != null)
-                {
-                    news.Image = await FileHelper.FileLoaderAsync(ImageFile, "img/News/");
-                }
-
-                _context.Add(news);
+                _context.Add(author);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
-            // Eğer model geçerli değilse, kategoriler ve yazarlar bilgilerini yeniden gönder
-            ViewBag.Authors = new SelectList(_context.Authors, "Id", "Name");
-            ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name");
-
-            return View(news);
+            return View(author);
         }
 
-
-
-        // GET: Admin/News/Edit/5
+        // GET: Admin/Authors/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -90,21 +73,21 @@ namespace NewsProject.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var news = await _context.News.FindAsync(id);
-            if (news == null)
+            var author = await _context.Authors.FindAsync(id);
+            if (author == null)
             {
                 return NotFound();
             }
-            return View(news);
+            return View(author);
         }
 
-        // POST: Admin/News/Edit/5
+        // POST: Admin/Authors/Edit/5
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, News news, IFormFile? Image, bool cbResmiSil = false)
+        public async Task<IActionResult> Edit(int id, Author author)
         {
-            if (id != news.Id)
+            if (id != author.Id)
             {
                 return NotFound();
             }
@@ -113,20 +96,12 @@ namespace NewsProject.Areas.Admin.Controllers
             {
                 try
                 {
-                    if (cbResmiSil)
-                    {
-                        news.Image = String.Empty;
-                    }
-                    if (Image is not null)
-                    {
-                        news.Image = await FileHelper.FileLoaderAsync(Image, "/img/News/");
-                    }
-                    _context.Update(news);
+                    _context.Update(author);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!NewsExists(news.Id))
+                    if (!AuthorExists(author.Id))
                     {
                         return NotFound();
                     }
@@ -137,10 +112,10 @@ namespace NewsProject.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(news);
+            return View(author);
         }
 
-        // GET: Admin/News/Delete/5
+        // GET: Admin/Authors/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -148,34 +123,34 @@ namespace NewsProject.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var news = await _context.News
+            var author = await _context.Authors
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (news == null)
+            if (author == null)
             {
                 return NotFound();
             }
 
-            return View(news);
+            return View(author);
         }
 
-        // POST: Admin/News/Delete/5
+        // POST: Admin/Authors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var news = await _context.News.FindAsync(id);
-            if (news != null)
+            var author = await _context.Authors.FindAsync(id);
+            if (author != null)
             {
-                _context.News.Remove(news);
+                _context.Authors.Remove(author);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool NewsExists(int id)
+        private bool AuthorExists(int id)
         {
-            return _context.News.Any(e => e.Id == id);
+            return _context.Authors.Any(e => e.Id == id);
         }
     }
 }
