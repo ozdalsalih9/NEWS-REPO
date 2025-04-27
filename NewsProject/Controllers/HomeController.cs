@@ -12,7 +12,7 @@ namespace NewsProject.Controllers
         {
             _logger = logger;
         }
-
+        // amcýk salih
         public IActionResult Index()
         {
             return View();
