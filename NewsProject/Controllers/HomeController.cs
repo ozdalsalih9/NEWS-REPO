@@ -12,7 +12,7 @@ namespace NewsProject.Controllers
         {
             _logger = logger;
         }
-
+        /*drgerb*/
         public IActionResult Index()
         {
             return View();
