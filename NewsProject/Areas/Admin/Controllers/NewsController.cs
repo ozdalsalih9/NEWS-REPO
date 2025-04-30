@@ -56,12 +56,11 @@ namespace NewsProject.Areas.Admin.Controllers
             return View();
         }
 
-        // POST: Admin/News/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(News news, IFormFile? ImageFile)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid || ImageFile != null) 
             {
                 if (ImageFile != null)
                 {
@@ -73,12 +72,12 @@ namespace NewsProject.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Eğer model geçerli değilse, kategoriler ve yazarlar bilgilerini yeniden gönder
             ViewBag.Authors = new SelectList(_context.Authors, "Id", "Name");
             ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name");
 
             return View(news);
         }
+
 
 
 
@@ -95,10 +94,10 @@ namespace NewsProject.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+            ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name", news.CategoryId);
+            ViewBag.Authors = new SelectList(_context.Authors, "Id", "Name", news.AuthorId);
             return View(news);
         }
-
-        // POST: Admin/News/Edit/5
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -113,16 +112,42 @@ namespace NewsProject.Areas.Admin.Controllers
             {
                 try
                 {
-                    if (cbResmiSil)
+                    var existingNews = await _context.News.AsNoTracking().FirstOrDefaultAsync(n => n.Id == id);
+                    if (existingNews == null)
+                        return NotFound();
+
+                    // Eski görselin yedeğini al
+                    var oldImage = existingNews.Image;
+
+                    // Eğer checkbox işaretliyse eski görseli sil
+                    if (cbResmiSil && !string.IsNullOrEmpty(oldImage))
                     {
-                        news.Image = String.Empty;
+                        FileHelper.FileRemover("img/News/", oldImage);
+                        news.Image = null;
                     }
-                    if (Image is not null)
+                    else
                     {
-                        news.Image = await FileHelper.FileLoaderAsync(Image, "/img/News/");
+                        news.Image = oldImage;
                     }
-                    _context.Update(news);
+
+                    // Yeni görsel yüklendiyse eskisini silip yenisini yükle
+                    if (Image != null)
+                    {
+                        if (!string.IsNullOrEmpty(oldImage))
+                        {
+                            FileHelper.FileRemover("img/News/", oldImage);
+                        }
+
+                        news.Image = await FileHelper.FileLoaderAsync(Image, "img/News/");
+                    }
+
+                    // Yayın tarihi değişmesin
+                    news.PublishDate = existingNews.PublishDate;
+
+                    _context.Entry(news).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -135,10 +160,17 @@ namespace NewsProject.Areas.Admin.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
+
+            // ViewBag'ler hata durumunda tekrar doldurulmalı
+            ViewData["Categories"] = new SelectList(_context.Categories, "Id", "Name", news.CategoryId);
+            ViewData["Authors"] = new SelectList(_context.Authors, "Id", "Name", news.AuthorId);
             return View(news);
         }
+
+
+
+
 
         // GET: Admin/News/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -157,8 +189,6 @@ namespace NewsProject.Areas.Admin.Controllers
 
             return View(news);
         }
-
-        // POST: Admin/News/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -166,12 +196,19 @@ namespace NewsProject.Areas.Admin.Controllers
             var news = await _context.News.FindAsync(id);
             if (news != null)
             {
+                if (!string.IsNullOrWhiteSpace(news.Image))
+                {
+                    FileHelper.FileRemover(news.Image, "img/News/");
+                }
+
                 _context.News.Remove(news);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
 
         private bool NewsExists(int id)
         {

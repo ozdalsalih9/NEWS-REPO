@@ -5,33 +5,36 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-
-
 <div class="row justify-content-center">
     <div class="col-md-6">
-        <form asp-action="Create">
+        <h2 class="text-center mb-4">Create User</h2>
+        <form asp-action="Create" method="post">
             <div class="form-group mb-3">
                 <label asp-for="UserName" class="form-label"></label>
-                <input asp-for="UserName" class="form-control" />
+                <input asp-for="UserName" class="form-control" required />
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
+
             <div class="form-group mb-3">
                 <label asp-for="Email" class="form-label"></label>
-                <input asp-for="Email" class="form-control" />
+                <input asp-for="Email" class="form-control" type="email" required />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
+
             <div class="form-group mb-3">
                 <label asp-for="Password" class="form-label"></label>
-                <input asp-for="Password" type="password" class="form-control" />
+                <input asp-for="Password" type="password" class="form-control" required />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
+
             <div class="form-group mb-4">
                 <label asp-for="Role" class="form-label"></label>
-                <select asp-for="Role" class="form-select" asp-items="ViewBag.RoleList">
+                <select asp-for="Role" class="form-select" asp-items="ViewBag.RoleList" required>
                     <option value="">-- Select Role --</option>
                 </select>
                 <span asp-validation-for="Role" class="text-danger"></span>
             </div>
+
             <div class="d-flex justify-content-between">
                 <a asp-action="Index" class="btn btn-secondary">Back to List</a>
                 <button type="submit" class="btn btn-primary">Create</button>

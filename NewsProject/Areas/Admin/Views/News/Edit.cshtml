@@ -1,72 +1,74 @@
 ﻿@model NewsProject.Models.News
 
 @{
-    ViewData["Title"] = "Edit";
-    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    ViewData["Title"] = "Haber Düzenle";
 }
 
-<h1>Edit</h1>
-
-<h4>News</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+    <div class="col-md-6">
+        <form asp-action="Edit" enctype="multipart/form-data" method="post">
+
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Hidden Fields for Id, Image, PublishDate -->
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
+            <input type="hidden" asp-for="PublishDate" />
+
+            <!-- Header Input -->
+            <div class="form-group mb-3">
                 <label asp-for="Header" class="control-label"></label>
-                <input asp-for="Header" class="form-control" />
+                <input asp-for="Header" class="form-control" required />
                 <span asp-validation-for="Header" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <!-- Content Textarea -->
+            <div class="form-group mb-3">
                 <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
+                <textarea asp-for="Content" class="form-control" rows="5" required></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="PublishDate" class="control-label"></label>
-                <input asp-for="PublishDate" class="form-control" />
-                <span asp-validation-for="PublishDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Image" class="control-label"></label>
-                <input asp-for="Image" class="form-control" type="file" />
-                <span asp-validation-for="Image" class="text-danger"></span>
-                @if (Model.Image != null && !string.IsNullOrWhiteSpace(Model.Image))
+
+            <!-- Image File Input -->
+            <div class="form-group mb-3">
+                <label class="control-label">Görsel</label>
+                <input type="file" name="Image" class="form-control" accept="image/*" />
+                @if (!string.IsNullOrWhiteSpace(Model.Image))
                 {
-                    <img src="/img/News/@Model.Image" height="75" />
-                    <label class="form-check-label">
-                        @Html.CheckBox("cbResmiSil") Resmi Sil
-                    </label>
+                    <div class="mt-2">
+                        <img src="/img/News/@Model.Image" height="75" />
+                        <div class="form-check mt-1">
+                            <label class="form-check-label">
+                                @Html.CheckBox("cbResmiSil") Resmi Sil
+                            </label>
+                        </div>
+                    </div>
                 }
+                <span asp-validation-for="Image" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <!-- Category Dropdown -->
+            <div class="form-group mb-3">
                 <label asp-for="CategoryId" class="control-label"></label>
-                <input asp-for="CategoryId" class="form-control" />
+                <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.Categories" required>
+                    <option value="">-- Kategori Seçiniz --</option>
+                </select>
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <!-- Author Dropdown -->
+            <div class="form-group mb-3">
                 <label asp-for="AuthorId" class="control-label"></label>
-                <input asp-for="AuthorId" class="form-control" />
+                <select asp-for="AuthorId" class="form-select" asp-items="ViewBag.Authors" required>
+                    <option value="">-- Yazar Seçiniz --</option>
+                </select>
                 <span asp-validation-for="AuthorId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Views" class="control-label"></label>
-                <input asp-for="Views" class="form-control" />
-                <span asp-validation-for="Views" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+
+            <!-- Submit Button -->
+            <div class="form-group mt-3">
+                <input type="submit" value="Kaydet" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

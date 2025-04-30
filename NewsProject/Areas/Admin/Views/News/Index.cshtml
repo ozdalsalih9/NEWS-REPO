@@ -5,47 +5,56 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>News List</h1>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">News List</h2>
+        <a asp-action="Create" class="btn btn-primary">+ Add New News</a>
+    </div>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New</a>
-</p>
-
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.Header)</th>
-            <th>@Html.DisplayNameFor(model => model.Content)</th>
-            <th>@Html.DisplayNameFor(model => model.PublishDate)</th>
-            <th>@Html.DisplayNameFor(model => model.CategoryId)</th>
-            <th>@Html.DisplayNameFor(model => model.AuthorId)</th>
-            <th>@Html.DisplayNameFor(model => model.Views)</th>
-            <th>Image</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.Header)</td>
-                <td>@Html.DisplayFor(modelItem => item.Content)</td>
-                <td>@Html.DisplayFor(modelItem => item.PublishDate)</td>
-                <td>@Html.DisplayFor(modelItem => item.CategoryId)</td>
-                <td>@Html.DisplayFor(modelItem => item.AuthorId)</td>
-                <td>@Html.DisplayFor(modelItem => item.Views)</td>
-                <td>
-                    @if (!string.IsNullOrEmpty(item.Image))
-                    {
-                        <img src="~/img/News/@item.Image" alt="News Image" style="height: 35px;" />
-                    }
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Header)</th>
+                    <th>@Html.DisplayNameFor(model => model.Content)</th>
+                    <th>@Html.DisplayNameFor(model => model.PublishDate)</th>
+                    <th>@Html.DisplayNameFor(model => model.CategoryId)</th>
+                    <th>@Html.DisplayNameFor(model => model.AuthorId)</th>
+                    <th>@Html.DisplayNameFor(model => model.Views)</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Header)</td>
+                        <td class="text-truncate" style="max-width: 200px;">@Html.DisplayFor(modelItem => item.Content)</td>
+                        <td>@item.PublishDate.ToShortDateString()</td>
+                        <td>@Html.DisplayFor(modelItem => item.CategoryId)</td>
+                        <td>@Html.DisplayFor(modelItem => item.AuthorId)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Views)</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Image))
+                            {
+                                <img src="~/img/News/@item.Image" alt="News Image" class="img-thumbnail" style="height: 50px;" />
+                            }
+                            else
+                            {
+                                <span class="text-muted">No image</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info text-white">Details</a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
