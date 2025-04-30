@@ -1,14 +1,14 @@
-﻿@model IEnumerable<NewsProject.Models.Category>
+﻿@model IEnumerable<NewsProject.Models.Author>
 
 @{
-    ViewData["Title"] = "Category List";
+    ViewData["Title"] = "Author List";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">Category List</h2>
-        <a asp-action="Create" class="btn btn-primary">+ Add New Category</a>
+        <h2 class="mb-0">Author List</h2>
+        <a asp-action="Create" class="btn btn-primary">+ Add New Author</a>
     </div>
 
     <div class="table-responsive">
@@ -16,6 +16,7 @@
             <thead class="table-dark">
                 <tr>
                     <th>@Html.DisplayNameFor(model => model.Name)</th>
+                    <th>@Html.DisplayNameFor(model => model.Bio)</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -24,6 +25,7 @@
                 {
                     <tr>
                         <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                        <td class="text-truncate" style="max-width: 250px;">@Html.DisplayFor(modelItem => item.Bio)</td>
                         <td>
                             <div class="btn-group" role="group">
                                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>

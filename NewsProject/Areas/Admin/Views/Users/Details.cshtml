@@ -1,4 +1,4 @@
-﻿@model NewsProject.Models.Slider
+﻿@model NewsProject.Models.User
 
 @{
     ViewData["Title"] = "Details";
@@ -6,33 +6,34 @@
 }
 
 
+
 <div>
 
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(model => model.UserName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
+            @Html.DisplayFor(model => model.UserName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.Email)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => model.Email)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Image)
+            @Html.DisplayNameFor(model => model.Password)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Image)
+            @Html.DisplayFor(model => model.Password)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Link)
+            @Html.DisplayNameFor(model => model.Role)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Link)
+            @Html.DisplayFor(model => model.Role)
         </dd>
     </dl>
 </div>

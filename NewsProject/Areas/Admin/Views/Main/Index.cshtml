@@ -1,5 +1,55 @@
 ﻿@*
-    
+    Admin Index Page - News Website Project
 *@
 @{
+    ViewBag.Title = "Dashboard";
 }
+
+<h1>Welcome to the Admin Dashboard</h1>
+
+<div class="admin-actions">
+    <h2>Manage Content</h2>
+    <ul>
+        <li><a href="/Admin/News">View All Articles</a></li
+        <li><a href="/Admin/Categories">Manage Categories</a></li>
+        <li><a href="/Admin/Comments">Moderate Comments</a></li>
+        <li><a href="/Admin/Users">Moderate Comments</a></li>
+    </ul>
+</div>
+
+
+
+<div class="admin-settings">
+    <h2>Settings</h2>
+    <ul>
+        <li><a href="/Admin/Users">Manage Users</a></li
+        <li><a href="/Account/Logout">Logout</a></li>
+    </ul>
+</div>
+
+<style>
+    h1, h2 {
+        font-family: Arial, sans-serif;
+        color: #333;
+    }
+    .admin-actions, .admin-stats, .admin-settings {
+        margin-top: 30px;
+        padding: 20px;
+        background-color: #f8f8f8;
+        border-radius: 8px;
+    }
+    ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+    ul li {
+        margin-bottom: 10px;
+    }
+    a {
+        text-decoration: none;
+        color: #007bff;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+</style>

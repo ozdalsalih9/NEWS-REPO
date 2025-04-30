@@ -1,7 +1,7 @@
-﻿@model NewsProject.Models.Category
+﻿@model NewsProject.Models.Author
 
 @{
-    ViewData["Title"] = "Create Category";
+    ViewData["Title"] = "Create Author";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
@@ -11,14 +11,21 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <!-- Category Name Input -->
+            <!-- Yazar Adı Alanı -->
             <div class="form-group mb-3">
-                <label asp-for="Name" class="control-label">Category Name</label>
+                <label asp-for="Name" class="control-label">Yazar Adı</label>
                 <input asp-for="Name" class="form-control" required />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
-            <!-- Submit Button -->
+            <!-- Yazar Biyografi Alanı -->
+            <div class="form-group mb-3">
+                <label asp-for="Bio" class="control-label">Biyografi</label>
+                <textarea asp-for="Bio" class="form-control" rows="3" required></textarea>
+                <span asp-validation-for="Bio" class="text-danger"></span>
+            </div>
+
+            <!-- Submit Butonu -->
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

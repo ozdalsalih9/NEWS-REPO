@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NewsProject.Data;
 using NewsProject.Models;
+using NewsProject.Utils;
 
 namespace NewsProject.Areas.Admin.Controllers
 {
@@ -54,15 +55,23 @@ namespace NewsProject.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( Slider slider)
+        public async Task<IActionResult> Create(Slider sliders, IFormFile? ImageFile)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid || ImageFile != null)
             {
-                _context.Add(slider);
+                if (ImageFile != null)
+                {
+                    sliders.Image = await FileHelper.FileLoaderAsync(ImageFile, "img/Sliders/");
+                }
+
+                _context.Add(sliders);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(slider);
+
+
+
+            return View(sliders);
         }
 
         // GET: Admin/Sliders/Edit/5
@@ -85,9 +94,9 @@ namespace NewsProject.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Slider slider)
+        public async Task<IActionResult> Edit(int id, Slider sliders, IFormFile? Image, bool cbResmiSil = false)
         {
-            if (id != slider.Id)
+            if (id != sliders.Id)
             {
                 return NotFound();
             }
@@ -96,12 +105,40 @@ namespace NewsProject.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(slider);
-                    await _context.SaveChangesAsync();
+                    var existingSlider = await _context.Slider.AsNoTracking().FirstOrDefaultAsync(s => s.Id == id);
+                    if (existingSlider == null)
+                        return NotFound();
+
+                    var oldImage = existingSlider.Image;
+
+                    // Resim silme checkbox'ı işaretli ise
+                    if (cbResmiSil && !string.IsNullOrEmpty(oldImage))
+                    {
+                        FileHelper.FileRemover(oldImage, "img/Sliders/");
+                        sliders.Image = null;
+                    }
+                    else
+                    {
+                        sliders.Image = oldImage;
+                    }
+
+                    // Yeni resim yüklendiyse
+                    if (Image != null)
+                    {
+                        if (!string.IsNullOrEmpty(oldImage))
+                        {
+                            FileHelper.FileRemover(oldImage, "img/Sliders/");
+                        }
+
+                        sliders.Image = await FileHelper.FileLoaderAsync(Image, "img/Sliders/");
+                    }
+
+                    _context.Update(sliders); // Güncelleme işlemi
+                    await _context.SaveChangesAsync(); // ❗️Eksikti: Veritabanına işle
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SliderExists(slider.Id))
+                    if (!SliderExists(sliders.Id))
                     {
                         return NotFound();
                     }
@@ -110,10 +147,13 @@ namespace NewsProject.Areas.Admin.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(slider);
+
+            return View(sliders);
         }
+
 
         // GET: Admin/Sliders/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -138,13 +178,18 @@ namespace NewsProject.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var slider = await _context.Slider.FindAsync(id);
-            if (slider != null)
+            var sliders = await _context.Slider.FindAsync(id);
+            if (sliders != null)
             {
-                _context.Slider.Remove(slider);
+                if (!string.IsNullOrWhiteSpace(sliders.Image))
+                {
+                    FileHelper.FileRemover(sliders.Image, "img/Sliders/");
+                }
+
+                _context.Slider.Remove(sliders);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

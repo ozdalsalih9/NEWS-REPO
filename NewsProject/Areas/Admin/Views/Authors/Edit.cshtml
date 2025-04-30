@@ -1,7 +1,7 @@
-﻿@model NewsProject.Models.Category
+﻿@model NewsProject.Models.Author
 
 @{
-    ViewData["Title"] = "Edit Category";
+    ViewData["Title"] = "Edit Author";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
@@ -11,17 +11,24 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <!-- Hidden Field for Category ID -->
+            <!-- Yazar Id Alanı -->
             <input type="hidden" asp-for="Id" />
 
-            <!-- Category Name Input -->
+            <!-- Yazar Adı Alanı -->
             <div class="form-group mb-3">
-                <label asp-for="Name" class="control-label">Kategori Adı</label>
+                <label asp-for="Name" class="control-label">Yazar Adı</label>
                 <input asp-for="Name" class="form-control" required />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
-            <!-- Save Button -->
+            <!-- Yazar Biyografi Alanı -->
+            <div class="form-group mb-3">
+                <label asp-for="Bio" class="control-label">Biyografi</label>
+                <textarea asp-for="Bio" class="form-control" rows="3" required></textarea>
+                <span asp-validation-for="Bio" class="text-danger"></span>
+            </div>
+
+            <!-- Submit Butonu -->
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
