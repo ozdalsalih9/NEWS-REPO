@@ -1,0 +1,35 @@
+﻿@model NewsProject.Models.News
+
+@{
+    ViewData["Title"] = Model.Header;
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm">
+                @if (!string.IsNullOrEmpty(Model.Image))
+                {
+                        <img src="~/img/News/@Model.Image" class="card-img-top" alt="@Model.Header" style="object-fit:cover; max-height:400px;" />
+                }
+
+                <div class="card-body">
+                    <h1 class="card-title">@Model.Header</h1>
+                    <p class="text-muted">
+                        <strong>Author:</strong> @Model.Author.Name |
+                        <strong>Category:</strong> @Model.Category.Name |
+                        <strong>Published:</strong> @Model.PublishDate.ToString("dd MMMM yyyy")
+                    </p>
+                    <hr />
+                    <p class="card-text" style="white-space: pre-line;">@Model.Content</p>
+                </div>
+
+                <div class="card-footer text-end">
+                    <a asp-action="Index" class="btn btn-secondary">← Back to News</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

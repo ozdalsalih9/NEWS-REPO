@@ -1,22 +1,49 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using NewsProject.Data;
 using NewsProject.Models;
 
 namespace NewsProject.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+
+
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var newsList = await _context.News
+                .Include(n => n.Author)
+                .Include(n => n.Category)
+                .OrderByDescending(n => n.PublishDate)
+                .ToListAsync();
+
+            return View(newsList);
         }
+
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var news = await _context.News
+                .Include(n => n.Author)
+                .Include(n => n.Category)
+                .FirstOrDefaultAsync(n => n.Id == id);
+
+            if (news == null)
+            {
+                return NotFound();
+            }
+
+            return View(news);
+        }
+
 
         public IActionResult Privacy()
         {
