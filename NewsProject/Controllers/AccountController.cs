@@ -5,6 +5,7 @@ using NewsProject.Data;
 using NewsProject.Models;
 using System.Linq;
 using System.Security.Claims;
+using Microsoft.CodeAnalysis.Scripting;
 
 namespace NewsProject.Controllers
 {
@@ -63,7 +64,6 @@ namespace NewsProject.Controllers
             return View();
         }
 
-        // POST: /Account/Login
         [HttpPost]
         public async Task<IActionResult> Login(User model)
         {
@@ -73,6 +73,7 @@ namespace NewsProject.Controllers
             {
                 var claims = new List<Claim>
         {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), // Bu kritik öneme sahip
             new Claim(ClaimTypes.Name, user.UserName),
             new Claim(ClaimTypes.Role, user.Role)
         };
@@ -80,32 +81,37 @@ namespace NewsProject.Controllers
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(identity);
 
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    principal,
+                    new AuthenticationProperties
+                    {
+                        IsPersistent = true, // "Beni hatırla" için
+                        ExpiresUtc = DateTime.UtcNow.AddDays(30) // 30 gün geçerli
+                    });
 
-                // Yönlendirme
+                // Rol kontrolü
                 if (user.Role == "Admin")
+                {
                     return RedirectToAction("Index", "Main", new { area = "Admin" });
-                else
-                    return RedirectToAction("Index", "Home");
+                }
+
+                return RedirectToAction("Index", "Home");
             }
 
             ModelState.AddModelError("", "Geçersiz kullanıcı adı veya şifre.");
             return View(model);
         }
 
+
+
+
+
         public IActionResult AccessDenied()
         {
             return View();
         }
-        [HttpPost]
-        public async Task<IActionResult> Logout()
-        {
-
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-
-            return RedirectToAction("Index", "Home"); 
-        }
+        
 
     }
 }

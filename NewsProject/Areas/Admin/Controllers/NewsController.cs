@@ -26,10 +26,14 @@ namespace NewsProject.Areas.Admin.Controllers
         // GET: Admin/News
         public async Task<IActionResult> Index()
         {
-            ViewBag.Authors = new SelectList(_context.Authors, "Id", "Name");
-            ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name");
-            return View(await _context.News.ToListAsync());
+            var newsWithRelations = await _context.News
+                .Include(n => n.Category)
+                .Include(n => n.Author)
+                .ToListAsync();
+
+            return View(newsWithRelations);
         }
+
 
         // GET: Admin/News/Details/5
         public async Task<IActionResult> Details(int? id)

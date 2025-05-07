@@ -11,11 +11,8 @@ namespace NewsProject.Areas.Admin.Controllers
     {
         public async Task<IActionResult> Logout()
         {
-            // Kullanıcıyı çıkış yap
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-            // HomeController Index sayfasına yönlendir
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home", new { area = "" });
         }
         public IActionResult Index()
         {

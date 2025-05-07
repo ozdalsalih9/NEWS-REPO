@@ -1,35 +1,102 @@
-﻿@model NewsProject.Models.News
+﻿@using System.Security.Claims
+@model NewsProject.Models.NewsDetailsViewModel
 
 @{
-    ViewData["Title"] = Model.Header;
+    ViewData["Title"] = Model.News.Header;
 }
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card shadow-sm">
-                @if (!string.IsNullOrEmpty(Model.Image))
+                @if (!string.IsNullOrEmpty(Model.News.Image))
                 {
-                        <img src="~/img/News/@Model.Image" class="card-img-top" alt="@Model.Header" style="object-fit:cover; max-height:400px;" />
+                    <img src="~/img/News/@Model.News.Image" class="card-img-top" alt="@Model.News.Header" style="object-fit:cover; max-height:400px;" />
                 }
 
                 <div class="card-body">
-                    <h1 class="card-title">@Model.Header</h1>
+                    <h1 class="card-title">@Model.News.Header</h1>
                     <p class="text-muted">
-                        <strong>Author:</strong> @Model.Author.Name |
-                        <strong>Category:</strong> @Model.Category.Name |
-                        <strong>Published:</strong> @Model.PublishDate.ToString("dd MMMM yyyy")
+                        <i class="fas fa-user"></i> <strong>Yazar:</strong> @Model.News.Author.Name |
+                        <i class="fas fa-tag"></i> <strong>Kategori:</strong> @Model.News.Category.Name |
+                        <i class="fas fa-calendar-alt"></i> <strong>Tarih:</strong> @Model.News.PublishDate.ToString("dd MMMM yyyy")
                     </p>
                     <hr />
-                    <p class="card-text" style="white-space: pre-line;">@Model.Content</p>
+                    <div class="card-text" style="white-space: pre-line;">@Model.News.Content</div>
                 </div>
 
                 <div class="card-footer text-end">
-                    <a asp-action="Index" class="btn btn-secondary">← Back to News</a>
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Haberlere Dön
+                    </a>
                 </div>
             </div>
+
+            <!-- Yorum Ekleme Bölümü -->
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="mt-4 p-4 bg-light rounded">
+                    <h5><i class="fas fa-comment-dots"></i> Yorum Yap</h5>
+                    <form method="post" asp-action="AddComment" asp-route-newsId="@Model.News.Id">
+                        @Html.AntiForgeryToken()
+                        <div class="mb-3">
+                            <textarea class="form-control" name="content" rows="3"
+                                      placeholder="Yorumunuzu buraya yazın..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Gönder
+                        </button>
+                    </form>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info mt-4">
+                    <i class="fas fa-info-circle"></i> Yorum yapabilmek için
+                    <a asp-controller="Account" asp-action="Login" class="alert-link">giriş yapmalısınız</a>.
+                </div>
+            }
+
+            <!-- Yorumlar -->
+            <!-- Yorumlar bölümünün içinde -->
+            @foreach (var comment in Model.Comments)
+            {
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-primary fw-bold">
+                                <i class="fas fa-user"></i> @comment.User.UserName
+                            </span>
+                            <small class="text-muted">
+                                <i class="fas fa-clock"></i> @comment.CommentDate.ToString("dd MMM yyyy HH:mm")
+                            </small>
+                        </div>
+                        <p class="card-text">@comment.Content</p>
+
+                        <!-- Silme butonu (sadece yetkili kullanıcılar için) -->
+                        @if (User.Identity.IsAuthenticated &&
+                       (comment.UserId.ToString() == User.FindFirstValue(ClaimTypes.NameIdentifier) ||
+                       User.IsInRole("Admin")))
+                        {
+                            <div class="mt-2 text-end">
+                                <form method="post"
+                                      asp-action="DeleteComment"
+                                      asp-route-commentId="@comment.Id"
+                                      asp-route-newsId="@Model.News.Id"
+                                      onsubmit="return confirm('Bu yorumu silmek istediğinize emin misiniz?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-trash-alt"></i> Sil
+                                    </button>
+                                </form>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
         </div>
     </div>
 </div>

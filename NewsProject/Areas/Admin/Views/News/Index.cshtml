@@ -18,8 +18,8 @@
                     <th>@Html.DisplayNameFor(model => model.Header)</th>
                     <th>@Html.DisplayNameFor(model => model.Content)</th>
                     <th>@Html.DisplayNameFor(model => model.PublishDate)</th>
-                    <th>@Html.DisplayNameFor(model => model.CategoryId)</th>
-                    <th>@Html.DisplayNameFor(model => model.AuthorId)</th>
+                    <th>Category</th>
+                    <th>Author</th>
                     <th>@Html.DisplayNameFor(model => model.Views)</th>
                     <th>Image</th>
                     <th>Actions</th>
@@ -32,8 +32,8 @@
                         <td>@Html.DisplayFor(modelItem => item.Header)</td>
                         <td class="text-truncate" style="max-width: 200px;">@Html.DisplayFor(modelItem => item.Content)</td>
                         <td>@item.PublishDate.ToShortDateString()</td>
-                        <td>@Html.DisplayFor(modelItem => item.CategoryId)</td>
-                        <td>@Html.DisplayFor(modelItem => item.AuthorId)</td>
+                        <td>@item.Category?.Name</td>
+                        <td>@item.Author?.Name</td>
                         <td>@Html.DisplayFor(modelItem => item.Views)</td>
                         <td>
                             @if (!string.IsNullOrEmpty(item.Image))

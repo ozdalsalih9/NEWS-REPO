@@ -7,32 +7,117 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/NewsProject.styles.css" asp-append-version="true" />
+    <style>
+        /* Diğer stiller aynı kaldı... */
+
+        /* Navbar Renk Değişikliği */
+        .navbar {
+            background-color: #ff4d4d; /* Kırmızı tonunda navbar */
+        }
+
+        .navbar-nav .nav-link {
+            color: white !important; /* Linklerin rengi beyaz olacak */
+        }
+
+            .navbar-nav .nav-link:hover {
+                color: #ffd700 !important; /* Hoverda altın sarısı renk */
+            }
+
+        .navbar-toggler-icon {
+            background-color: white; /* Hamburger menü ikonu beyaz */
+        }
+
+        .navbar-nav .nav-link.active {
+            color: #ffd700 !important; /* Aktif link altın sarısı */
+        }
+
+        /* Yeni eklenen loading animasyonu stilleri */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+            .loading-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #ff4d4d; /* Kırmızı spinner */
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 15px;
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            color: #ff4d4d; /* Kırmızı renk yükleniyor metni */
+            font-weight: bold;
+        }
+
+
+
+        {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+
+        }
+    </style>
 </head>
 <body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Yükleniyor...</div>
+    </div>
+
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="/">NewsProject</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary border-bottom shadow-sm">
+            <div class="container">
+                <a class="navbar-brand fw-bold" href="/">📰 Dümenden Haber</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item">
-                            <a class="nav-link text-light" href="/">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" href="/Home/Privacy">Privacy</a>
-                        </li>
 
+                <div class="collapse navbar-collapse justify-content-between" id="navbarContent">
+                    <!-- Kategoriler -->
+                    <div class="navbar-nav mx-auto nav-category">
+                        <a class="nav-link" asp-controller="Categories" asp-action="Politics">Siyaset</a>
+                        <a class="nav-link" asp-controller="Categories" asp-action="Health">Sağlık</a>
+                        <a class="nav-link" asp-controller="Categories" asp-action="Sports">Spor</a>
+                        <a class="nav-link" asp-controller="Categories" asp-action="Magazine">Magazin</a>
+                        <a class="nav-link" asp-controller="Categories" asp-action="Technology">Teknoloji</a>
+                        <a class="nav-link" asp-controller="Categories" asp-action="Economy">Ekonomi</a>
+                    </div>
+
+                    <!-- Giriş Durumu -->
+                    <ul class="navbar-nav nav-user">
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <span class="nav-link text-light">Welcome, @User.Identity.Name</span>
+                                <span class="nav-link text-light">👋 @User.Identity.Name</span>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-light" href="@Url.Action("Logout", "Account")">Logout</a>
+                                <a class="nav-link text-light logout-link" href="@Url.Action("Logout", "Home")">Logout</a>
                             </li>
                         }
                         else
@@ -56,15 +141,48 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - NewsProject - <a href="/Home/Privacy">Privacy</a>
-        </div>
-    </footer>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        // Sayfa yükleme animasyonu
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+
+            // Sayfa yüklenirken göster
+            loadingOverlay.classList.add('active');
+
+            // Sayfa tamamen yüklendiğinde gizle
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    loadingOverlay.classList.remove('active');
+                }, 500);
+            });
+
+            // Tüm linkler için yükleme animasyonu
+            document.querySelectorAll('a:not([href^="#"]):not([target="_blank"])').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (this.href && this.href !== '#' && !this.classList.contains('no-loading')) {
+                        loadingOverlay.classList.add('active');
+                    }
+                });
+            });
+
+            // Özellikle logout linki için ekstra kontrol
+            document.querySelectorAll('.logout-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    loadingOverlay.classList.add('active');
+
+                    // Logout işlemi için ekstra bekleme süresi
+                    setTimeout(function() {
+                        window.location.href = link.href;
+                    }, 1000); // 1 saniye göster (isteğe bağlı)
+                });
+            });
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
