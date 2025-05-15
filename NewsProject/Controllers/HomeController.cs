@@ -47,9 +47,17 @@ namespace NewsProject.Controllers
                 return NotFound();
             }
 
-            // Yorumlarý ve her bir yorumun kullanýcý bilgilerini al
+            // Kullanýcý giriþ yaptýysa Views sayýsýný artýr
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                news.Views++;
+                _context.News.Update(news);
+                await _context.SaveChangesAsync();
+            }
+
+            // Yorumlarý al
             var comments = await _context.Comments
-                .Include(c => c.User)  // Yorum yapan kullanýcý bilgisi
+                .Include(c => c.User)
                 .Where(c => c.NewsId == id)
                 .OrderByDescending(c => c.CommentDate)
                 .ToListAsync();
@@ -62,6 +70,7 @@ namespace NewsProject.Controllers
 
             return View(model);
         }
+
 
 
         [HttpPost]

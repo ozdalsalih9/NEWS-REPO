@@ -8,44 +8,216 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/NewsProject.styles.css" asp-append-version="true" />
     <style>
-        /* Diğer stiller aynı kaldı... */
+        :root {
+            --primary-red: #d62828;
+            --dark-red: #ba181b;
+            --light-red: #e5383b;
+            --accent-gold: #ffd700;
+            --light-bg: #fff5f5;
+        }
+        /* Footer Stilleri */
+        .site-footer {
+            background-color: var(--dark-red);
+            color: white;
+            padding: 60px 0 30px;
+            font-size: 0.95rem;
+            position: relative;
+            margin-top: 80px;
+        }
 
-        /* Navbar Renk Değişikliği */
+            .site-footer::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 5px;
+                background: linear-gradient(90deg, var(--primary-red), var(--accent-gold), var(--primary-red));
+            }
+
+            .site-footer h5 {
+                color: var(--accent-gold);
+                font-weight: 600;
+                margin-bottom: 20px;
+                font-size: 1.1rem;
+                position: relative;
+                padding-bottom: 10px;
+            }
+
+                .site-footer h5::after {
+                    content: '';
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 50px;
+                    height: 2px;
+                    background-color: rgba(255, 215, 0, 0.5);
+                }
+
+            .site-footer a {
+                color: rgba(255, 255, 255, 0.8);
+                display: block;
+                margin-bottom: 10px;
+                transition: all 0.3s ease;
+                text-decoration: none;
+            }
+
+                .site-footer a:hover {
+                    color: var(--accent-gold);
+                    padding-left: 5px;
+                }
+
+            .site-footer p {
+                color: rgba(255, 255, 255, 0.8);
+                line-height: 1.6;
+                margin-bottom: 15px;
+            }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+            .social-links a {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background-color: rgba(255, 255, 255, 0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                transition: all 0.3s ease;
+                margin-bottom: 0;
+            }
+
+                .social-links a:hover {
+                    background-color: var(--accent-gold);
+                    color: var(--dark-red);
+                    transform: translateY(-3px);
+                }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Font Awesome ikonları için boşluk ayarı */
+        .site-footer i {
+            margin-right: 8px;
+            width: 20px;
+            text-align: center;
+        }
+
+
+
+       
+
+        body {
+            background-color: var(--light-bg);
+            color: #333;
+        }
+
+        /* Navbar Stilleri */
         .navbar {
-            background-color: #ff4d4d; /* Kırmızı tonunda navbar */
+            background-color: var(--dark-red) !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: white !important;
+            font-size: 1.5rem;
         }
 
         .navbar-nav .nav-link {
-            color: white !important; /* Linklerin rengi beyaz olacak */
+            color: white !important;
+            font-weight: 500;
+            margin: 0 5px;
+            position: relative;
+            transition: all 0.3s ease;
         }
 
-            .navbar-nav .nav-link:hover {
-                color: #ffd700 !important; /* Hoverda altın sarısı renk */
+            .navbar-nav .nav-link:hover,
+            .navbar-nav .nav-link:focus {
+                color: var(--accent-gold) !important;
             }
 
+            .navbar-nav .nav-link.active {
+                color: var(--accent-gold) !important;
+                font-weight: 600;
+            }
+
+                .navbar-nav .nav-link.active::after {
+                    content: '';
+                    position: absolute;
+                    bottom: 5px;
+                    left: 0;
+                    right: 0;
+                    height: 2px;
+                    background-color: var(--accent-gold);
+                    width: 50%;
+                    margin: 0 auto;
+                }
+
+        .navbar-toggler {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
         .navbar-toggler-icon {
-            background-color: white; /* Hamburger menü ikonu beyaz */
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
         }
 
-        .navbar-nav .nav-link.active {
-            color: #ffd700 !important; /* Aktif link altın sarısı */
+        /* Container ve Main Alanı */
+        .container {
+            max-width: 1200px;
         }
 
-        /* Yeni eklenen loading animasyonu stilleri */
+        main {
+            padding-top: 20px;
+            min-height: calc(100vh - 120px);
+        }
+
+        /* Buton Stilleri */
+        .btn-primary {
+            background-color: var(--primary-red);
+            border-color: var(--primary-red);
+        }
+
+            .btn-primary:hover,
+            .btn-primary:focus {
+                background-color: var(--dark-red);
+                border-color: var(--dark-red);
+            }
+
+        /* Footer Stilleri */
+        footer {
+            background-color: var(--dark-red);
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+
+        /* Loading Animasyonu */
         .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.9);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 9999;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
             .loading-overlay.active {
@@ -54,32 +226,58 @@
             }
 
         .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #ff4d4d; /* Kırmızı spinner */
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(214, 40, 40, 0.2);
+            border-top-color: var(--primary-red);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-right: 15px;
+            margin-bottom: 15px;
         }
 
         .loading-text {
             font-size: 1.2rem;
-            color: #ff4d4d; /* Kırmızı renk yükleniyor metni */
-            font-weight: bold;
+            color: var(--dark-red);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
+        /*footer*/
 
 
-        {
-            transform: rotate(0deg);
+
+        /* Ekstra Kırmızı Tema Elementleri */
+        .card {
+            border: none;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        100% {
-            transform: rotate(360deg);
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            }
+
+        .card-header {
+            background-color: var(--primary-red);
+            color: white;
+            font-weight: 600;
         }
 
+        .text-primary {
+            color: var(--primary-red) !important;
         }
+
+        a {
+            color: var(--primary-red);
+            transition: color 0.2s ease;
+        }
+
+            a:hover {
+                color: var(--dark-red);
+                text-decoration: none;
+            }
     </style>
 </head>
 <body>
@@ -90,9 +288,9 @@
     </div>
 
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary border-bottom shadow-sm">
+        <nav class="navbar navbar-expand-lg navbar-dark border-bottom shadow-sm">
             <div class="container">
-                <a class="navbar-brand fw-bold" href="/">📰 Dümenden Haber</a>
+                <a class="navbar-brand" href="/">📰 Dümenden Haber</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
                         aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -117,16 +315,16 @@
                                 <span class="nav-link text-light">👋 @User.Identity.Name</span>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-light logout-link" href="@Url.Action("Logout", "Home")">Logout</a>
+                                <a class="nav-link text-light logout-link" href="@Url.Action("Logout", "Home")">Çıkış Yap</a>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-light" href="@Url.Action("Login", "Account")">Login</a>
+                                <a class="nav-link text-light" href="@Url.Action("Login", "Account")">Giriş Yap</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-light" href="@Url.Action("Register", "Account")">Register</a>
+                                <a class="nav-link text-light" href="@Url.Action("Register", "Account")">Kayıt Ol</a>
                             </li>
                         }
                     </ul>
@@ -140,6 +338,51 @@
             @RenderBody()
         </main>
     </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5>Haber Portalı</h5>
+                    <p>Güncel ve doğru haberleri sizlere ulaştırmak için çalışıyoruz. En son gelişmeleri takip etmek için bizi takip edin.</p>
+                    <div class="social-links mt-4">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Kategoriler</h5>
+                    <a href="#">Gündem</a>
+                    <a href="#">Ekonomi</a>
+                    <a href="#">Spor</a>
+                    <a href="#">Teknoloji</a>
+                    <a href="#">Sağlık</a>
+                    <a href="#">Eğitim</a>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Hızlı Linkler</h5>
+                    <a href="#">Hakkımızda</a>
+                    <a href="#">Yazar Kadrosu</a>
+                    <a href="#">Reklam</a>
+                    <a href="#">İletişim</a>
+                    <a href="#">Gizlilik Politikası</a>
+                    <a href="#">Kullanım Şartları</a>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5>İletişim</h5>
+                    <p><i class="fas fa-map-marker-alt me-2"></i> 1234 Haber Caddesi, İstanbul</p>
+                    <p><i class="fas fa-phone me-2"></i> (0212) 123 45 67</p>
+                    <p><i class="fas fa-envelope me-2"></i> info@haberportali.com</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; @DateTime.Now.Year Haber Portalı - Tüm hakları saklıdır.</p>
+            </div>
+        </div>
+    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -164,20 +407,27 @@
             document.querySelectorAll('a:not([href^="#"]):not([target="_blank"])').forEach(link => {
                 link.addEventListener('click', function(e) {
                     if (this.href && this.href !== '#' && !this.classList.contains('no-loading')) {
+                        e.preventDefault();
                         loadingOverlay.classList.add('active');
+
+                        // Yönlendirme için küçük bir gecikme
+                        setTimeout(() => {
+                            window.location.href = this.href;
+                        }, 300);
                     }
                 });
             });
 
-            // Özellikle logout linki için ekstra kontrol
+            // Logout linki için özel işlem
             document.querySelectorAll('.logout-link').forEach(link => {
                 link.addEventListener('click', function(e) {
+                    e.preventDefault();
                     loadingOverlay.classList.add('active');
 
                     // Logout işlemi için ekstra bekleme süresi
-                    setTimeout(function() {
+                    setTimeout(() => {
                         window.location.href = link.href;
-                    }, 1000); // 1 saniye göster (isteğe bağlı)
+                    }, 800);
                 });
             });
         });

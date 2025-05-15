@@ -73,7 +73,7 @@ namespace NewsProject.Controllers
             {
                 var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), // Bu kritik öneme sahip
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), 
             new Claim(ClaimTypes.Name, user.UserName),
             new Claim(ClaimTypes.Role, user.Role)
         };
@@ -87,7 +87,7 @@ namespace NewsProject.Controllers
                     new AuthenticationProperties
                     {
                         IsPersistent = true, // "Beni hatırla" için
-                        ExpiresUtc = DateTime.UtcNow.AddDays(30) // 30 gün geçerli
+                        ExpiresUtc = DateTime.UtcNow.AddDays(3) // 
                     });
 
                 // Rol kontrolü
